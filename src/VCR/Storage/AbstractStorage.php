@@ -124,7 +124,11 @@ abstract class AbstractStorage implements Storage
         if (!isset($recording['response']['body'])) {
             return;
         }
-        $body = dirname($this->filePath) . uniqid('/body_', true);
+
+        $cwd = \getcwd();
+        $absDir = \realpath(\dirname($this->filePath));
+        $relDir = \sprintf('.%s', \str_replace($cwd, '', $absDir));
+        $body = $relDir . uniqid('/body_', true);
         file_put_contents($body, $recording['response']['body']);
         $recording['response']['body'] = $body;
     }
